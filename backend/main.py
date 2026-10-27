@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,HTTPException,Path
 from backend.schemas import LearnerProfileCreate, LearnerProfileRead
 from psycopg.rows import dict_row
 from backend.database import get_connection
@@ -30,3 +30,23 @@ def create_profile(profile: LearnerProfileCreate) -> LearnerProfileRead:
                 ),
             )
             return LearnerProfileRead.model_validate(cursor.fetchone())
+
+@app.get("/profiles/{profile_id}")
+def read_profile(profile_id: int = Path(gt=0)) -> LearnerProfileRead:
+    with get_connection() as connection:
+        with connection.cursor(row_factory=dict_row) as cursor:
+            cursor.execute(
+                """
+                SELECT id, python_level, ai_level, learning_goal,
+                       weekly_hours, created_at
+                FROM learner_profiles
+                WHERE id = %s
+                """,
+                (profile_id,),
+            )
+            row = cursor.fetchone()
+
+    if row is None:
+        raise HTTPException(status_code=404, detail="Learner profile not found")
+
+    return LearnerProfileRead.model_validate(row)
