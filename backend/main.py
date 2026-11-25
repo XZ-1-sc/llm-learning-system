@@ -3,6 +3,8 @@ from backend.schemas import LearnerProfileCreate, LearnerProfileRead
 from psycopg.rows import dict_row
 from backend.database import get_connection
 from backend.diagnostics import QUESTIONS
+from backend.diagnostics import QUESTIONS, grade_diagnostic
+from backend.schemas import DiagnosticSubmission, LearnerProfileCreate, LearnerProfileRead
 
 app = FastAPI(title="RAG个性化学习系统")
 
@@ -63,3 +65,13 @@ def list_diagnostic_questions():
         }
         for question_id, question_data in QUESTIONS.items()
     ]
+
+@app.post("/diagnostics")
+def submit_diagnostic(submission: DiagnosticSubmission):
+    try:
+        result = grade_diagnostic(submission.answers)
+    except ValueError as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
+
+    read_profile(submission.profile_id)
+    return {"profile_id": submission.profile_id, **result}
