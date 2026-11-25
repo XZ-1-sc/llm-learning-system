@@ -2,6 +2,7 @@ from fastapi import FastAPI,HTTPException,Path
 from backend.schemas import LearnerProfileCreate, LearnerProfileRead
 from psycopg.rows import dict_row
 from backend.database import get_connection
+from backend.diagnostics import QUESTIONS
 
 app = FastAPI(title="RAG个性化学习系统")
 
@@ -50,3 +51,15 @@ def read_profile(profile_id: int = Path(gt=0)) -> LearnerProfileRead:
         raise HTTPException(status_code=404, detail="Learner profile not found")
 
     return LearnerProfileRead.model_validate(row)
+
+@app.get("/diagnostics/questions")
+def list_diagnostic_questions():
+    return [
+        {
+            "id": question_id,
+            "topic": question_data["topic"],
+            "prompt": question_data["prompt"],
+            "options": question_data["options"],
+        }
+        for question_id, question_data in QUESTIONS.items()
+    ]
