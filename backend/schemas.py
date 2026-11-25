@@ -12,3 +12,7 @@ class LearnerProfileCreate(BaseModel):
 class LearnerProfileRead(LearnerProfileCreate):
     id: int
     created_at: datetime
+
+class DiagnosticSubmission(BaseModel):
+    profile_id: int = Field(gt=0)
+    answers: dict[str, Literal["A", "B", "C"]]
