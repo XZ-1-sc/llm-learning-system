@@ -1,3 +1,5 @@
+from collections.abc import Mapping
+
 QUESTIONS = {
     "python_list": {
         "topic": "python",
@@ -26,3 +28,22 @@ QUESTIONS = {
         "correct_answer": "A",
     },
 }
+
+def grade_diagnostic(answers: Mapping[str, str]) -> dict[str, int | list[str]]:
+    missing = QUESTIONS.keys() - answers.keys()
+    unknown = answers.keys() - QUESTIONS.keys()
+
+    if missing or unknown:
+        raise ValueError(f"缺少题号：{sorted(missing)}；未知题号：{sorted(unknown)}")
+
+    incorrect_ids = [
+        question_id
+        for question_id, question in QUESTIONS.items()
+        if answers[question_id] != question["correct_answer"]
+    ]
+
+    return {
+        "score": len(QUESTIONS) - len(incorrect_ids),
+        "total": len(QUESTIONS),
+        "incorrect_question_ids": incorrect_ids,
+    }
