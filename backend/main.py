@@ -4,11 +4,14 @@ from psycopg.rows import dict_row
 from backend.database import get_connection
 from backend.diagnostics import QUESTIONS
 from backend.diagnostics import QUESTIONS, grade_diagnostic, recommend_study
+from backend.learning_resources import LEARNING_RESOURCES
 from backend.schemas import (
     DiagnosticResultRead,
     DiagnosticSubmission,
     LearningPlanRead,
     LearningPlanStep,
+    LearningResourceRead,
+    LearningTopic,
     LearnerProfileCreate,
     LearnerProfileRead,
 )
@@ -147,3 +150,12 @@ def read_learning_plan(diagnostic_id: int = Path(gt=0)) -> LearningPlanRead:
         weekly_hours=profile.weekly_hours,
         steps=[LearningPlanStep(task=tip, estimated_minutes=minutes_per_step) for tip in tips],
     )
+
+
+@app.get("/learning-resources")
+def list_learning_resources(topic: LearningTopic | None = None) -> list[LearningResourceRead]:
+    return [
+        resource
+        for resource in LEARNING_RESOURCES
+        if topic is None or resource.topic == topic
+    ]

@@ -38,3 +38,14 @@ class LearningPlanRead(BaseModel):
     learning_goal: str
     weekly_hours: int
     steps: list[LearningPlanStep]
+
+
+LearningTopic = Literal["python", "llm", "rag"]
+
+
+class LearningResourceRead(BaseModel):
+    topic: LearningTopic
+    title: str
+    publisher: str
+    source_url: str
+    summary: str

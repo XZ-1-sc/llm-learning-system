@@ -42,3 +42,4 @@
 4. 使用 `GET /diagnostics/{diagnostic_id}` 读取该诊断记录，核对分数和错题编号。
 5. 使用 `GET /diagnostics/{diagnostic_id}/recommendations` 查看对应的练习建议。
 6. 使用 `GET /diagnostics/{diagnostic_id}/learning-plan` 查看结合每周可用时间安排的练习任务。
+7. 使用 `GET /learning-resources` 查看官方学习资料，或加上 `?topic=python`、`?topic=llm`、`?topic=rag` 按主题筛选。
