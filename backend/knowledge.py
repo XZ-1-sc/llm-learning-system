@@ -1,5 +1,5 @@
 from backend.learning_resources import LLM_CONTEXT, PYTHON_LISTS, RAG_OVERVIEW, matches_keywords
-from backend.schemas import KnowledgePassageRead
+from backend.schemas import KnowledgePassageRead, RagCitation, RagContextRead
 
 
 KNOWLEDGE_PASSAGES = (
@@ -31,3 +31,13 @@ def find_knowledge_passages(search_query: str) -> list[KnowledgePassageRead]:
         for passage in KNOWLEDGE_PASSAGES
         if matches_keywords(terms, passage.source.topic, passage.source.title, passage.text)
     ]
+
+
+def build_rag_context(question: str, search_query: str) -> RagContextRead:
+    passages = find_knowledge_passages(search_query)
+    return RagContextRead(
+        status="ready" if passages else "insufficient_evidence",
+        question=question,
+        context="\n\n".join(f"[{passage.id}]\n{passage.text}" for passage in passages),
+        citations=[RagCitation(passage_id=passage.id, source=passage.source) for passage in passages],
+    )

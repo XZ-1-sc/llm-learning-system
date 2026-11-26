@@ -45,3 +45,4 @@
 7. 使用 `GET /learning-resources` 查看官方学习资料，或加上 `?topic=python`、`?topic=llm`、`?topic=rag` 按主题筛选。
 8. 使用 `GET /learning-resources/search?q=RAG` 搜索资料。用空格分隔多个关键词时，每个词都需要匹配。没有匹配项时返回空列表。
 9. 使用 `GET /knowledge/search?q=append` 检索知识片段。结果包含片段编号、正文和官方来源，可作为后续 RAG 回答的引用依据。
+10. 使用 `POST /rag/context` 预览 RAG 上下文，例如提交 `{"question":"append 会修改原列表吗？","search_query":"append 列表"}`。返回带片段编号的 `context` 和 `citations`，供后续生成使用。找不到片段时返回 `insufficient_evidence`，正文和引用均为空。

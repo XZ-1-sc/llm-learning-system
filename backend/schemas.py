@@ -44,6 +44,23 @@ class KnowledgePassageRead(BaseModel):
     source: LearningResourceRead
 
 
+class RagContextRequest(BaseModel):
+    question: str = Field(min_length=1, max_length=500, pattern=r"\S")
+    search_query: str = Field(min_length=1, max_length=100, pattern=r"\S")
+
+
+class RagCitation(BaseModel):
+    passage_id: str
+    source: LearningResourceRead
+
+
+class RagContextRead(BaseModel):
+    status: Literal["ready", "insufficient_evidence"]
+    question: str
+    context: str
+    citations: list[RagCitation]
+
+
 class LearningPlanStep(BaseModel):
     task: str
     estimated_minutes: int

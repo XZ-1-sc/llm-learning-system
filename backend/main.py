@@ -4,7 +4,7 @@ from psycopg.rows import dict_row
 from backend.database import get_connection
 from backend.diagnostics import QUESTIONS
 from backend.diagnostics import QUESTIONS, grade_diagnostic, recommend_study, recommend_study_tasks
-from backend.knowledge import find_knowledge_passages
+from backend.knowledge import build_rag_context, find_knowledge_passages
 from backend.learning_resources import LEARNING_RESOURCES, find_learning_resources
 from backend.schemas import (
     DiagnosticResultRead,
@@ -16,6 +16,8 @@ from backend.schemas import (
     LearningTopic,
     LearnerProfileCreate,
     LearnerProfileRead,
+    RagContextRead,
+    RagContextRequest,
 )
 
 app = FastAPI(title="RAG个性化学习系统")
@@ -182,3 +184,8 @@ def search_knowledge(
     search_query: str = Query(alias="q", min_length=1, max_length=100, pattern=r"\S"),
 ) -> list[KnowledgePassageRead]:
     return find_knowledge_passages(search_query)
+
+
+@app.post("/rag/context")
+def preview_rag_context(request: RagContextRequest) -> RagContextRead:
+    return build_rag_context(request.question, request.search_query)
