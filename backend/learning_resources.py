@@ -24,3 +24,15 @@ LEARNING_RESOURCES = (
         summary="了解怎样先从外部资料中检索信息，再用检索结果辅助模型生成回答。",
     ),
 )
+
+
+def find_learning_resources(search_query: str) -> list[LearningResourceRead]:
+    terms = search_query.casefold().split()
+    matches = []
+    for resource in LEARNING_RESOURCES:
+        searchable_text = " ".join(
+            (resource.topic, resource.title, resource.publisher, resource.summary)
+        ).casefold()
+        if terms and all(term in searchable_text for term in terms):
+            matches.append(resource)
+    return matches

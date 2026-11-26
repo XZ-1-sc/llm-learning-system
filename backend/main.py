@@ -1,10 +1,10 @@
-from fastapi import FastAPI,HTTPException,Path
+from fastapi import FastAPI, HTTPException, Path, Query
 from backend.schemas import LearnerProfileCreate, LearnerProfileRead
 from psycopg.rows import dict_row
 from backend.database import get_connection
 from backend.diagnostics import QUESTIONS
 from backend.diagnostics import QUESTIONS, grade_diagnostic, recommend_study, recommend_study_tasks
-from backend.learning_resources import LEARNING_RESOURCES
+from backend.learning_resources import LEARNING_RESOURCES, find_learning_resources
 from backend.schemas import (
     DiagnosticResultRead,
     DiagnosticSubmission,
@@ -166,3 +166,10 @@ def list_learning_resources(topic: LearningTopic | None = None) -> list[Learning
         for resource in LEARNING_RESOURCES
         if topic is None or resource.topic == topic
     ]
+
+
+@app.get("/learning-resources/search")
+def search_learning_resources(
+    search_query: str = Query(alias="q", min_length=1, max_length=100, pattern=r"\S"),
+) -> list[LearningResourceRead]:
+    return find_learning_resources(search_query)
