@@ -4,10 +4,12 @@ from psycopg.rows import dict_row
 from backend.database import get_connection
 from backend.diagnostics import QUESTIONS
 from backend.diagnostics import QUESTIONS, grade_diagnostic, recommend_study, recommend_study_tasks
+from backend.knowledge import find_knowledge_passages
 from backend.learning_resources import LEARNING_RESOURCES, find_learning_resources
 from backend.schemas import (
     DiagnosticResultRead,
     DiagnosticSubmission,
+    KnowledgePassageRead,
     LearningPlanRead,
     LearningPlanStep,
     LearningResourceRead,
@@ -173,3 +175,10 @@ def search_learning_resources(
     search_query: str = Query(alias="q", min_length=1, max_length=100, pattern=r"\S"),
 ) -> list[LearningResourceRead]:
     return find_learning_resources(search_query)
+
+
+@app.get("/knowledge/search")
+def search_knowledge(
+    search_query: str = Query(alias="q", min_length=1, max_length=100, pattern=r"\S"),
+) -> list[KnowledgePassageRead]:
+    return find_knowledge_passages(search_query)

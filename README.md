@@ -44,3 +44,4 @@
 6. 使用 `GET /diagnostics/{diagnostic_id}/learning-plan` 查看结合每周可用时间安排的练习任务，每项任务的 `resources` 列出了对应的官方资料。
 7. 使用 `GET /learning-resources` 查看官方学习资料，或加上 `?topic=python`、`?topic=llm`、`?topic=rag` 按主题筛选。
 8. 使用 `GET /learning-resources/search?q=RAG` 搜索资料。用空格分隔多个关键词时，每个词都需要匹配。没有匹配项时返回空列表。
+9. 使用 `GET /knowledge/search?q=append` 检索知识片段。结果包含片段编号、正文和官方来源，可作为后续 RAG 回答的引用依据。

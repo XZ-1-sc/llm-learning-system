@@ -38,6 +38,12 @@ class LearningResourceRead(BaseModel):
     summary: str
 
 
+class KnowledgePassageRead(BaseModel):
+    id: str
+    text: str
+    source: LearningResourceRead
+
+
 class LearningPlanStep(BaseModel):
     task: str
     estimated_minutes: int
