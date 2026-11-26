@@ -41,5 +41,5 @@
 3. 使用 `POST /diagnostics` 提交画像编号 `profile_id` 和答卷，记下返回的诊断编号 `id`。
 4. 使用 `GET /diagnostics/{diagnostic_id}` 读取该诊断记录，核对分数和错题编号。
 5. 使用 `GET /diagnostics/{diagnostic_id}/recommendations` 查看对应的练习建议。
-6. 使用 `GET /diagnostics/{diagnostic_id}/learning-plan` 查看结合每周可用时间安排的练习任务。
+6. 使用 `GET /diagnostics/{diagnostic_id}/learning-plan` 查看结合每周可用时间安排的练习任务，每项任务的 `resources` 列出了对应的官方资料。
 7. 使用 `GET /learning-resources` 查看官方学习资料，或加上 `?topic=python`、`?topic=llm`、`?topic=rag` 按主题筛选。

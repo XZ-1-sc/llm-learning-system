@@ -27,19 +27,6 @@ class DiagnosticResultRead(BaseModel):
     created_at: datetime
 
 
-class LearningPlanStep(BaseModel):
-    task: str
-    estimated_minutes: int
-
-
-class LearningPlanRead(BaseModel):
-    diagnostic_id: int
-    profile_id: int
-    learning_goal: str
-    weekly_hours: int
-    steps: list[LearningPlanStep]
-
-
 LearningTopic = Literal["python", "llm", "rag"]
 
 
@@ -49,3 +36,17 @@ class LearningResourceRead(BaseModel):
     publisher: str
     source_url: str
     summary: str
+
+
+class LearningPlanStep(BaseModel):
+    task: str
+    estimated_minutes: int
+    resources: list[LearningResourceRead]
+
+
+class LearningPlanRead(BaseModel):
+    diagnostic_id: int
+    profile_id: int
+    learning_goal: str
+    weekly_hours: int
+    steps: list[LearningPlanStep]

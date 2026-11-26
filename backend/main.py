@@ -3,7 +3,7 @@ from backend.schemas import LearnerProfileCreate, LearnerProfileRead
 from psycopg.rows import dict_row
 from backend.database import get_connection
 from backend.diagnostics import QUESTIONS
-from backend.diagnostics import QUESTIONS, grade_diagnostic, recommend_study
+from backend.diagnostics import QUESTIONS, grade_diagnostic, recommend_study, recommend_study_tasks
 from backend.learning_resources import LEARNING_RESOURCES
 from backend.schemas import (
     DiagnosticResultRead,
@@ -140,15 +140,22 @@ def read_study_recommendations(diagnostic_id: int = Path(gt=0)) -> list[str]:
 def read_learning_plan(diagnostic_id: int = Path(gt=0)) -> LearningPlanRead:
     result = read_diagnostic(diagnostic_id)
     profile = read_profile(result.profile_id)
-    tips = recommend_study(result.incorrect_question_ids)
-    minutes_per_step = min(30, profile.weekly_hours * 60 // len(tips))
+    tasks = recommend_study_tasks(result.incorrect_question_ids)
+    minutes_per_step = min(30, profile.weekly_hours * 60 // len(tasks))
 
     return LearningPlanRead(
         diagnostic_id=result.id,
         profile_id=profile.id,
         learning_goal=profile.learning_goal,
         weekly_hours=profile.weekly_hours,
-        steps=[LearningPlanStep(task=tip, estimated_minutes=minutes_per_step) for tip in tips],
+        steps=[
+            LearningPlanStep(
+                task=task,
+                estimated_minutes=minutes_per_step,
+                resources=[resource for resource in LEARNING_RESOURCES if resource.topic in topics],
+            )
+            for task, topics in tasks
+        ],
     )
 
 
