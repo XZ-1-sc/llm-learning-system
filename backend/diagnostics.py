@@ -29,6 +29,12 @@ QUESTIONS = {
     },
 }
 
+STUDY_TIPS = {
+    "python_list": "Python：创建一个三元素列表，用 len() 检查长度，再追加一个元素并预测新长度。",
+    "llm_context": "LLM：对同一个问题分别提供和省略项目说明，比较两次回答引用了哪些信息。",
+    "rag_retrieval": "RAG：准备三段资料，挑出与问题最相关的一段，再用它作为回答依据。",
+}
+
 def grade_diagnostic(answers: Mapping[str, str]) -> dict[str, int | list[str]]:
     missing = QUESTIONS.keys() - answers.keys()
     unknown = answers.keys() - QUESTIONS.keys()
@@ -47,3 +53,15 @@ def grade_diagnostic(answers: Mapping[str, str]) -> dict[str, int | list[str]]:
         "total": len(QUESTIONS),
         "incorrect_question_ids": incorrect_ids,
     }
+
+
+def recommend_study(incorrect_question_ids: list[str]) -> list[str]:
+    if not incorrect_question_ids:
+        return ["综合练习：选一段与问题相关的资料，将它放进模型请求，再核对回答是否有资料依据。"]
+
+    tips = [
+        STUDY_TIPS[question_id]
+        for question_id in dict.fromkeys(incorrect_question_ids)
+        if question_id in STUDY_TIPS
+    ]
+    return tips or ["这次诊断的错题暂无对应练习，请重新测验以获取学习建议。"]

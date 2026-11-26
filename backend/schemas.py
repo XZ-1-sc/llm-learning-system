@@ -16,3 +16,25 @@ class LearnerProfileRead(LearnerProfileCreate):
 class DiagnosticSubmission(BaseModel):
     profile_id: int = Field(gt=0)
     answers: dict[str, Literal["A", "B", "C"]]
+
+
+class DiagnosticResultRead(BaseModel):
+    id: int
+    profile_id: int
+    score: int
+    total: int
+    incorrect_question_ids: list[str]
+    created_at: datetime
+
+
+class LearningPlanStep(BaseModel):
+    task: str
+    estimated_minutes: int
+
+
+class LearningPlanRead(BaseModel):
+    diagnostic_id: int
+    profile_id: int
+    learning_goal: str
+    weekly_hours: int
+    steps: list[LearningPlanStep]
