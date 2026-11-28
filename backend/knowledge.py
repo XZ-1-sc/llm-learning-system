@@ -23,14 +23,37 @@ KNOWLEDGE_PASSAGES = (
     ),
 )
 
+QUESTION_PREFIXES = ("请问", "如何", "怎样", "怎么")
+SEARCH_ALIASES = (
+    ("尾部", "末尾"),
+    ("上下文长度", "上下文窗口"),
+    ("从资料里找答案", "检索 生成回答"),
+    ("从资料中找答案", "检索 生成回答"),
+)
 
-def find_knowledge_passages(search_query: str) -> list[KnowledgePassageRead]:
-    terms = search_query.casefold().split()
+
+def _find_passages_by_terms(terms: list[str]) -> list[KnowledgePassageRead]:
     return [
         passage
         for passage in KNOWLEDGE_PASSAGES
         if matches_keywords(terms, passage.source.topic, passage.source.title, passage.text)
     ]
+
+
+def find_knowledge_passages(search_query: str) -> list[KnowledgePassageRead]:
+    terms = search_query.casefold().split()
+    matches = _find_passages_by_terms(terms)
+    if matches:
+        return matches
+
+    normalized_query = search_query.casefold().strip().rstrip("?？。")
+    for prefix in QUESTION_PREFIXES:
+        normalized_query = normalized_query.removeprefix(prefix).lstrip(" \t，,")
+    for alias, replacement in SEARCH_ALIASES:
+        normalized_query = normalized_query.replace(alias, replacement)
+
+    fallback_terms = normalized_query.split()
+    return _find_passages_by_terms(fallback_terms) if fallback_terms != terms else []
 
 
 def build_rag_context(question: str, search_query: str) -> RagContextRead:

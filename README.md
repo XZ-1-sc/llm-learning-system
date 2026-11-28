@@ -44,7 +44,7 @@
 6. 使用 `GET /diagnostics/{diagnostic_id}/learning-plan` 查看结合每周可用时间安排的练习任务，每项任务的 `resources` 列出了对应的官方资料。
 7. 使用 `GET /learning-resources` 查看官方学习资料，或加上 `?topic=python`、`?topic=llm`、`?topic=rag` 按主题筛选。
 8. 使用 `GET /learning-resources/search?q=RAG` 搜索资料。用空格分隔多个关键词时，每个词都需要匹配。没有匹配项时返回空列表。
-9. 使用 `GET /knowledge/search?q=append` 检索知识片段。结果包含片段编号、正文和官方来源，可作为后续 RAG 回答的引用依据。
+9. 使用 `GET /knowledge/search?q=append` 检索知识片段。结果包含片段编号、正文和官方来源。直接匹配没有结果时，检索器会尝试改写已登记的常见说法，例如将“列表尾部”转换为“列表末尾”。
 10. 使用 `POST /rag/context` 预览 RAG 上下文，例如提交 `{"question":"append 会修改原列表吗？","search_query":"append 列表"}`。返回带片段编号的 `context` 和 `citations`，供后续生成使用。找不到片段时返回 `insufficient_evidence`，正文和引用均为空。
 11. 配置模型后，把同一个请求提交到 `POST /rag/answer`。它只将问题和检索片段发给模型，返回答案与实际引用的原文链接。证据不足时返回 `insufficient_evidence`。
 
