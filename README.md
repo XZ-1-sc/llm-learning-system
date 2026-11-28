@@ -53,3 +53,13 @@
 在本地 `.env` 中填写 `OPENAI_API_KEY` 和 `OPENAI_MODEL`，再重启后端。`OPENAI_BASE_URL` 默认是 `https://api.openai.com/v1`。使用兼容服务时，选择支持 Chat Completions JSON 模式和 `max_completion_tokens` 的模型，并填写该服务的 API 根地址。密钥保存在本地 `.env`。
 
 `/rag/answer` 找不到片段时不会请求模型。有片段但未配置模型时返回 `503`，模型请求失败或返回了无效引用时返回 `502`。
+
+### 离线检索评测
+
+在项目根目录运行以下命令，无需启动后端、数据库或配置模型密钥。
+
+```powershell
+& .\.venv\Scripts\python.exe -X utf8 -m evaluation.evaluate_retrieval
+```
+
+样例和人工标注的相关片段编号保存在 `evaluation/retrieval_cases.json`。脚本报告片段召回率、无答案时正确返回空列表的比例，以及结果完全匹配的比例，并列出发生漏检或多返回的用例。这组小样例用于建立检索基线，模型答案的质量需要另行评测。

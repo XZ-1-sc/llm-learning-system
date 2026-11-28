@@ -1,0 +1,12 @@
+[
+  {"id": "python-append", "query": "append 列表", "expected_passage_ids": ["python-list-append"]},
+  {"id": "llm-tokens", "query": "token 上下文", "expected_passage_ids": ["llm-context-window"]},
+  {"id": "rag-keyword", "query": "RAG 检索", "expected_passage_ids": ["rag-retrieval-and-generation"]},
+  {"id": "multiple-passages", "query": "模型", "expected_passage_ids": ["llm-context-window", "rag-retrieval-and-generation"]},
+  {"id": "python-paraphrase", "query": "列表尾部", "expected_passage_ids": ["python-list-append"]},
+  {"id": "llm-paraphrase", "query": "上下文长度", "expected_passage_ids": ["llm-context-window"]},
+  {"id": "rag-natural-question", "query": "怎样从资料里找答案", "expected_passage_ids": ["rag-retrieval-and-generation"]},
+  {"id": "missing-weather", "query": "天气预报", "expected_passage_ids": []},
+  {"id": "missing-sql", "query": "PostgreSQL 索引", "expected_passage_ids": []},
+  {"id": "missing-concurrency", "query": "Python 并发", "expected_passage_ids": []}
+]
