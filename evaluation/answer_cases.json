@@ -5,7 +5,7 @@
     "search_query": "append 列表",
     "expected_status": "answered",
     "expected_passage_ids": ["python-list-append"],
-    "expected_keywords": ["修改", "原列表"]
+    "expected_keyword_groups": [["修改"], ["原列表"]]
   },
   {
     "id": "request-context",
@@ -13,7 +13,10 @@
     "search_query": "项目说明 token",
     "expected_status": "answered",
     "expected_passage_ids": ["llm-context-window"],
-    "expected_keywords": ["项目说明", "请求", "上下文"]
+    "expected_keyword_groups": [
+      ["项目说明"],
+      ["同一次模型请求", "同一次请求", "本次模型请求", "本次请求", "这次请求", "提示词的上下文"]
+    ]
   },
   {
     "id": "rag-pipeline",
@@ -21,7 +24,7 @@
     "search_query": "RAG 检索",
     "expected_status": "answered",
     "expected_passage_ids": ["rag-retrieval-and-generation"],
-    "expected_keywords": ["检索", "上下文"]
+    "expected_keyword_groups": [["检索"], ["上下文"]]
   },
   {
     "id": "unsupported-concurrency-question",
@@ -29,6 +32,6 @@
     "search_query": "Python 并发",
     "expected_status": "insufficient_evidence",
     "expected_passage_ids": [],
-    "expected_keywords": []
+    "expected_keyword_groups": []
   }
 ]

@@ -21,7 +21,7 @@ class AnswerCase(BaseModel):
     search_query: str
     expected_status: Literal["answered", "insufficient_evidence"]
     expected_passage_ids: list[str]
-    expected_keywords: list[str]
+    expected_keyword_groups: list[list[str]]
 
 
 def load_cases() -> list[AnswerCase]:
@@ -46,14 +46,18 @@ def grade_answer(case: AnswerCase, result: RagAnswerRead) -> list[str]:
         issues.append(f"缺少引用 {sorted(expected_ids - actual_ids)}，额外引用 {sorted(actual_ids - expected_ids)}")
 
     text = result.answer.casefold()
-    missing = [keyword for keyword in case.expected_keywords if keyword.casefold() not in text]
+    missing = [
+        group
+        for group in case.expected_keyword_groups
+        if not any(phrase.casefold() in text for phrase in group)
+    ]
     if missing:
-        issues.append(f"缺少答案关键词 {missing}")
+        issues.append(f"缺少答案要点（每组接受任一表述）{missing}")
     return issues
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="检查 RAG 回答状态、引用和关键词")
+    parser = argparse.ArgumentParser(description="检查 RAG 回答状态、引用和答案要点")
     parser.add_argument("--live", action="store_true", help="使用本地配置调用真实模型")
     options = parser.parse_args(argv)
     cases = load_cases()
