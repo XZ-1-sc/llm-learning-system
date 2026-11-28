@@ -61,6 +61,12 @@ class RagContextRead(BaseModel):
     citations: list[RagCitation]
 
 
+class RagAnswerRead(BaseModel):
+    status: Literal["answered", "insufficient_evidence"]
+    answer: str
+    citations: list[RagCitation]
+
+
 class LearningPlanStep(BaseModel):
     task: str
     estimated_minutes: int

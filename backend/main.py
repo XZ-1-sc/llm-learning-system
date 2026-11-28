@@ -6,6 +6,7 @@ from backend.diagnostics import QUESTIONS
 from backend.diagnostics import QUESTIONS, grade_diagnostic, recommend_study, recommend_study_tasks
 from backend.knowledge import build_rag_context, find_knowledge_passages
 from backend.learning_resources import LEARNING_RESOURCES, find_learning_resources
+from backend.rag_answer import RagModelNotConfiguredError, RagModelResponseError, answer_from_knowledge
 from backend.schemas import (
     DiagnosticResultRead,
     DiagnosticSubmission,
@@ -16,6 +17,7 @@ from backend.schemas import (
     LearningTopic,
     LearnerProfileCreate,
     LearnerProfileRead,
+    RagAnswerRead,
     RagContextRead,
     RagContextRequest,
 )
@@ -189,3 +191,13 @@ def search_knowledge(
 @app.post("/rag/context")
 def preview_rag_context(request: RagContextRequest) -> RagContextRead:
     return build_rag_context(request.question, request.search_query)
+
+
+@app.post("/rag/answer")
+def answer_question(request: RagContextRequest) -> RagAnswerRead:
+    try:
+        return answer_from_knowledge(request.question, request.search_query)
+    except RagModelNotConfiguredError as error:
+        raise HTTPException(status_code=503, detail="RAG model is not configured") from error
+    except RagModelResponseError as error:
+        raise HTTPException(status_code=502, detail="RAG model call or response validation failed") from error

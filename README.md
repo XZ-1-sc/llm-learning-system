@@ -46,3 +46,10 @@
 8. 使用 `GET /learning-resources/search?q=RAG` 搜索资料。用空格分隔多个关键词时，每个词都需要匹配。没有匹配项时返回空列表。
 9. 使用 `GET /knowledge/search?q=append` 检索知识片段。结果包含片段编号、正文和官方来源，可作为后续 RAG 回答的引用依据。
 10. 使用 `POST /rag/context` 预览 RAG 上下文，例如提交 `{"question":"append 会修改原列表吗？","search_query":"append 列表"}`。返回带片段编号的 `context` 和 `citations`，供后续生成使用。找不到片段时返回 `insufficient_evidence`，正文和引用均为空。
+11. 配置模型后，把同一个请求提交到 `POST /rag/answer`。它只将问题和检索片段发给模型，返回答案与实际引用的原文链接。证据不足时返回 `insufficient_evidence`。
+
+### 模型配置
+
+在本地 `.env` 中填写 `OPENAI_API_KEY` 和 `OPENAI_MODEL`，再重启后端。`OPENAI_BASE_URL` 默认是 `https://api.openai.com/v1`。使用兼容服务时，选择支持 Chat Completions JSON 模式和 `max_completion_tokens` 的模型，并填写该服务的 API 根地址。密钥保存在本地 `.env`。
+
+`/rag/answer` 找不到片段时不会请求模型。有片段但未配置模型时返回 `503`，模型请求失败或返回了无效引用时返回 `502`。
