@@ -21,12 +21,13 @@
    docker compose up -d db
    ```
 
-4. 数据库就绪后，依次创建画像表 `learner_profiles`、诊断结果表 `diagnostic_results`，并启用 pgvector。逐条执行，确认前一条成功再执行下一条。已有的表可跳过对应命令，pgvector 初始化脚本可以重复运行。
+4. 数据库就绪后，依次创建画像表、诊断结果表，启用 pgvector，再创建知识片段向量表。逐条执行，确认前一条成功再执行下一条。前两张表已存在时可跳过对应命令，后两个脚本可重复运行。
 
    ```powershell
    Get-Content -Raw -Encoding UTF8 .\backend\schema.sql | docker compose exec -T db psql -U llm_user -d llm_learning -v ON_ERROR_STOP=1 --single-transaction -f -
    Get-Content -Raw -Encoding UTF8 .\backend\diagnostics_schema.sql | docker compose exec -T db psql -U llm_user -d llm_learning -v ON_ERROR_STOP=1 --single-transaction -f -
    Get-Content -Raw -Encoding UTF8 .\backend\enable_pgvector.sql | docker compose exec -T db psql -U llm_user -d llm_learning -v ON_ERROR_STOP=1 --single-transaction -f -
+   Get-Content -Raw -Encoding UTF8 .\backend\knowledge_embeddings_schema.sql | docker compose exec -T db psql -U llm_user -d llm_learning -v ON_ERROR_STOP=1 --single-transaction -f -
    ```
 
 5. 启动后端。
@@ -64,6 +65,8 @@
 ```
 
 样例和人工标注的相关片段编号保存在 `evaluation/retrieval_cases.json`。脚本报告片段召回率、无答案时正确返回空列表的比例，以及结果完全匹配的比例，并列出发生漏检或多返回的用例。这组小样例用于建立检索基线，模型答案的质量需要另行评测。
+
+`knowledge_passage_embeddings` 保存 384 维向量，为多语种模型 `multilingual-e5-small` 的后续实验准备。最近邻查询在同一个模型内按余弦距离排序。当前知识检索接口仍使用关键词。
 
 ### RAG 问答评测
 
