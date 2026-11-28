@@ -57,7 +57,11 @@ def request_model_reply(evidence: RagContextRead) -> RagModelReply:
         request = Request(
             f"{base_url}/chat/completions",
             data=json.dumps(payload).encode("utf-8"),
-            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+                "User-Agent": "llm-learning-system/0.1",
+            },
             method="POST",
         )
         with urlopen(request, timeout=15) as response:
