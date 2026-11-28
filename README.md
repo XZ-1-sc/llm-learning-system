@@ -21,11 +21,12 @@
    docker compose up -d db
    ```
 
-4. 数据库就绪后，依次创建画像表 `learner_profiles` 和诊断结果表 `diagnostic_results`。逐条执行，确认前一条成功再执行下一条。如果某张表已经建好，跳过对应命令。
+4. 数据库就绪后，依次创建画像表 `learner_profiles`、诊断结果表 `diagnostic_results`，并启用 pgvector。逐条执行，确认前一条成功再执行下一条。已有的表可跳过对应命令，pgvector 初始化脚本可以重复运行。
 
    ```powershell
    Get-Content -Raw -Encoding UTF8 .\backend\schema.sql | docker compose exec -T db psql -U llm_user -d llm_learning -v ON_ERROR_STOP=1 --single-transaction -f -
    Get-Content -Raw -Encoding UTF8 .\backend\diagnostics_schema.sql | docker compose exec -T db psql -U llm_user -d llm_learning -v ON_ERROR_STOP=1 --single-transaction -f -
+   Get-Content -Raw -Encoding UTF8 .\backend\enable_pgvector.sql | docker compose exec -T db psql -U llm_user -d llm_learning -v ON_ERROR_STOP=1 --single-transaction -f -
    ```
 
 5. 启动后端。
