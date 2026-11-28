@@ -63,3 +63,14 @@
 ```
 
 样例和人工标注的相关片段编号保存在 `evaluation/retrieval_cases.json`。脚本报告片段召回率、无答案时正确返回空列表的比例，以及结果完全匹配的比例，并列出发生漏检或多返回的用例。这组小样例用于建立检索基线，模型答案的质量需要另行评测。
+
+### RAG 问答评测
+
+在项目根目录运行以下命令。第一条只校验 `evaluation/answer_cases.json`，第二条读取本地模型配置并实际发起推理请求。
+
+```powershell
+& .\.venv\Scripts\python.exe -X utf8 -m evaluation.evaluate_answers
+& .\.venv\Scripts\python.exe -X utf8 -m evaluation.evaluate_answers --live
+```
+
+评测检查回答状态、引用编号和答案关键词，并逐条报告未通过的原因。关键词命中只提供初步信号，事实是否准确、结论是否受到引用支持仍需人工核对。真实评测出现失败时，脚本以非零状态码退出。

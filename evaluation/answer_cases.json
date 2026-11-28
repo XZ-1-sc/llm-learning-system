@@ -1,0 +1,34 @@
+[
+  {
+    "id": "append-mutation",
+    "question": "Python 的 append() 会修改原列表吗？",
+    "search_query": "append 列表",
+    "expected_status": "answered",
+    "expected_passage_ids": ["python-list-append"],
+    "expected_keywords": ["修改", "原列表"]
+  },
+  {
+    "id": "request-context",
+    "question": "想让模型在本次回答中参考项目说明，应该把说明放在哪里？",
+    "search_query": "项目说明 token",
+    "expected_status": "answered",
+    "expected_passage_ids": ["llm-context-window"],
+    "expected_keywords": ["项目说明", "请求", "上下文"]
+  },
+  {
+    "id": "rag-pipeline",
+    "question": "RAG 怎样把检索到的资料用于生成回答？",
+    "search_query": "RAG 检索",
+    "expected_status": "answered",
+    "expected_passage_ids": ["rag-retrieval-and-generation"],
+    "expected_keywords": ["检索", "上下文"]
+  },
+  {
+    "id": "unsupported-concurrency-question",
+    "question": "Python 的并发有哪些实现方式？",
+    "search_query": "Python 并发",
+    "expected_status": "insufficient_evidence",
+    "expected_passage_ids": [],
+    "expected_keywords": []
+  }
+]
